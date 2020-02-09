@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { IonicPage, NavController, ToastController } from 'ionic-angular';
-
 import { User } from '../../providers';
-import { MainPage } from '../';
 
 @IonicPage()
 @Component({
@@ -11,40 +8,47 @@ import { MainPage } from '../';
   templateUrl: 'login.html'
 })
 export class LoginPage {
-  // The account fields for the login form.
-  // If you're using the username field with or without email, make
-  // sure to add it to the type
-  account: { email: string, password: string } = {
-    email: 'test@example.com',
-    password: 'test'
+  // Json for login to server
+  account: { username: string, password: string } = {
+    username: '',
+    password: ''
   };
 
-  // Our translated text strings
-  private loginErrorString: string;
 
   constructor(public navCtrl: NavController,
     public user: User,
-    public toastCtrl: ToastController,
-    public translateService: TranslateService) {
+    public toastCtrl: ToastController) {
 
-    this.translateService.get('LOGIN_ERROR').subscribe((value) => {
-      this.loginErrorString = value;
-    })
+  
   }
 
-  // Attempt to login in through our User service
   doLogin() {
-    this.user.login(this.account).subscribe((resp) => {
-      this.navCtrl.push(MainPage);
-    }, (err) => {
-      this.navCtrl.push(MainPage);
-      // Unable to log in
+    if(this.account.username.length < 3 || this.account.password.length < 3){
+      // Unable to login
       let toast = this.toastCtrl.create({
-        message: this.loginErrorString,
-        duration: 3000,
-        position: 'top'
+        message: "Debe ingresar un usuario/password correcto. Mínimo de 3 dígitos. ",
+        duration: 5000,
+        position: 'bottom'
       });
       toast.present();
-    });
+    }else{
+      this.user.login(this.account).subscribe((resp) => {
+        // Success Login
+        this.navCtrl.setRoot('TabsPage', {}, {
+          animate: true,
+          direction: 'forward'
+        });
+      }, (err) => {
+        // Unable to log in
+        let toast = this.toastCtrl.create({
+          message: "Error al iniciar sesion. Datos incorrectos",
+          duration: 3000,
+          position: 'bottom'
+        });
+        toast.present();
+      });
+
+    }
+    
   }
 }

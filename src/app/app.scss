@@ -14,3 +14,26 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+
+.okButton {
+    background-color: #FA4616 !important;
+    border-radius: 5px !important;
+    color: #fff !important;
+}
+
+.okButton span {
+    color: #fff !important;
+    font-weight: bold !important;
+}
+
+
+.cancelButton {
+    background-color: #CBCBCB !important;
+    border-radius: 5px !important;
+}
+
+.cancelButton span {
+    color: #5A5A5A !important;
+    font-weight: bold !important;
+}

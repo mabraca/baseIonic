@@ -1,8 +1,8 @@
 import 'rxjs/add/operator/toPromise';
-
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
 import { Api } from '../api/api';
+
 
 /**
  * Most apps have the concept of a User. This is a simple provider
@@ -10,22 +10,12 @@ import { Api } from '../api/api';
  *
  * This User provider makes calls to our API at the `login` and `signup` endpoints.
  *
- * By default, it expects `login` and `signup` to return a JSON object of the shape:
- *
- * ```json
- * {
- *   status: 'success',
- *   user: {
- *     // User fields your app needs, like "id", "name", "email", etc.
- *   }
- * }Ø
- * ```
- *
  * If the `status` field is not `success`, then an error is detected and returned.
  */
 @Injectable()
 export class User {
-  _user: any;
+   // Global var to save the token after login
+   myStorage = window.localStorage;
 
   constructor(public api: Api) { }
 
@@ -34,11 +24,11 @@ export class User {
    * the user entered on the form.
    */
   login(accountInfo: any) {
-    let seq = this.api.post('login', accountInfo).share();
+    let seq = this.api.post('auth/login', accountInfo).share();
 
     seq.subscribe((res: any) => {
       // If the API returned a successful response, mark the user as logged in
-      if (res.status == 'success') {
+      if (res.accessToken) {
         this._loggedIn(res);
       } else {
       }
@@ -54,17 +44,7 @@ export class User {
    * the user entered on the form.
    */
   signup(accountInfo: any) {
-    let seq = this.api.post('signup', accountInfo).share();
-
-    seq.subscribe((res: any) => {
-      // If the API returned a successful response, mark the user as logged in
-      if (res.status == 'success') {
-        this._loggedIn(res);
-      }
-    }, err => {
-      console.error('ERROR', err);
-    });
-
+    let seq = this.api.post('auth/register', accountInfo).share();
     return seq;
   }
 
@@ -72,13 +52,79 @@ export class User {
    * Log the user out, which forgets the session
    */
   logout() {
-    this._user = null;
+    this.myStorage.setItem('user', null);
+    this.myStorage.setItem('token', null);
+    this.myStorage.setItem('tokenType',null);
+    // Just for sure
+    this.myStorage.clear();
   }
 
   /**
-   * Process a login/signup response to store user data
+   * Process a login response to store user data
    */
   _loggedIn(resp) {
-    this._user = resp.user;
+    this.myStorage.setItem('user', resp.username);
+    this.myStorage.setItem('token', resp.accessToken);
+    this.myStorage.setItem('tokenType',resp.tokenType);
+
+
   }
+
+  /**
+   * Send a GET request to users endpoint with the header
+   * authorization token to get all users
+   */
+  allUsers() {
+
+    let reqOpts = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': this.myStorage.getItem("tokenType")+ ' ' +this.myStorage.getItem("token")
+        },
+       params: new HttpParams()
+      };
+    let seq = this.api.get('users', reqOpts).share();
+    return seq;
+  }
+
+   /**
+   * Send a GET request to users endpoint with the header
+   * authorization token to get an user in specifict
+   */
+  findUser(name) {
+
+    let reqOpts = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': this.myStorage.getItem("tokenType")+ ' ' +this.myStorage.getItem("token")
+        },
+       params: new HttpParams()
+      };
+
+    let values = "?q="+name;
+    let seq = this.api.get('users', reqOpts, values).share();
+    return seq;
+  }
+
+  /**
+   * Send a DELETE request to users/{id} endpoint with the header
+   * authorization token to delete an user
+   */
+  deleteUser(id) {
+    let reqOpts = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': this.myStorage.getItem("tokenType")+ ' ' + this.myStorage.getItem("token")
+        },
+       params: new HttpParams()
+      };
+    let seq = this.api.delete('users/'+id, reqOpts).share();
+    return seq;
+  }
+
+
+
 }

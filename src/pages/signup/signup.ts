@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { IonicPage, NavController, ToastController } from 'ionic-angular';
-
 import { User } from '../../providers';
-import { MainPage } from '../';
 
 @IonicPage()
 @Component({
@@ -11,43 +8,49 @@ import { MainPage } from '../';
   templateUrl: 'signup.html'
 })
 export class SignupPage {
-  // The account fields for the login form.
-  // If you're using the username field with or without email, make
-  // sure to add it to the type
-  account: { name: string, email: string, password: string } = {
-    name: 'Test Human',
-    email: 'test@example.com',
-    password: 'test'
+  // Json for signup to server
+  account: { username: string, password: string } = {
+    username: '',
+    password: ''
   };
-
-  // Our translated text strings
-  private signupErrorString: string;
 
   constructor(public navCtrl: NavController,
     public user: User,
-    public toastCtrl: ToastController,
-    public translateService: TranslateService) {
+    public toastCtrl: ToastController) {
 
-    this.translateService.get('SIGNUP_ERROR').subscribe((value) => {
-      this.signupErrorString = value;
-    })
   }
 
   doSignup() {
-    // Attempt to login in through our User service
-    this.user.signup(this.account).subscribe((resp) => {
-      this.navCtrl.push(MainPage);
-    }, (err) => {
-
-      this.navCtrl.push(MainPage);
-
-      // Unable to sign up
-      let toast = this.toastCtrl.create({
-        message: this.signupErrorString,
-        duration: 3000,
-        position: 'top'
+    // Verify if the username and password have min 3 char.
+    if(this.account.username.length < 3 || this.account.password.length < 3){
+       let toast = this.toastCtrl.create({
+        message: "Debe ingresar un usuario/password correcto. Mínimo de 3 dígitos. ",
+        duration: 5000,
+        position: 'bottom'
       });
       toast.present();
-    });
+    }else{
+      this.user.signup(this.account).subscribe((resp) => {
+        //Success signup
+        this.navCtrl.setRoot('WelcomePage', {}, {
+          animate: true,
+          direction: 'forward'
+        });
+        let toast = this.toastCtrl.create({
+          message: "Registro Exitoso. Puede iniciar sesión con sus datos",
+          duration: 5000,
+          position: 'bottom'
+        });
+        toast.present();
+      }, (err) => {
+        // Unable to sign up
+        let toast = this.toastCtrl.create({
+          message: "Error al registrar. Intente nuevamente",
+          duration: 3000,
+          position: 'bottom'
+        });
+        toast.present();
+      });
+    }
   }
 }

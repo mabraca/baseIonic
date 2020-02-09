@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, ModalController, NavController } from 'ionic-angular';
-
-import { Item } from '../../models/item';
-import { Items } from '../../providers';
+import { IonicPage, ModalController, NavController, ToastController, AlertController  } from 'ionic-angular';
+import { User } from '../../providers';
+import { MainPage } from '../';
 
 @IonicPage()
 @Component({
@@ -10,45 +9,89 @@ import { Items } from '../../providers';
   templateUrl: 'list-master.html'
 })
 export class ListMasterPage {
-  currentItems: Item[];
+  currentUsers: any;
 
-  constructor(public navCtrl: NavController, public items: Items, public modalCtrl: ModalController) {
-    this.currentItems = this.items.query();
+  constructor(public navCtrl: NavController, 
+    public modalCtrl: ModalController, 
+    public user: User, 
+    public toastCtrl: ToastController,
+    private alertCtrl: AlertController,) {
   }
 
   /**
-   * The view loaded, let's query our items for the list
+   * The view loaded, let's query our users for the list
    */
   ionViewDidLoad() {
-  }
+    this.user.allUsers().subscribe((resp) => {
+      this.currentUsers = resp;
 
-  /**
-   * Prompt the user to add a new item. This shows our ItemCreatePage in a
-   * modal and then adds the new item to our data source if the user created one.
-   */
-  addItem() {
-    let addModal = this.modalCtrl.create('ItemCreatePage');
-    addModal.onDidDismiss(item => {
-      if (item) {
-        this.items.add(item);
-      }
-    })
-    addModal.present();
-  }
-
-  /**
-   * Delete an item from the list of items.
-   */
-  deleteItem(item) {
-    this.items.delete(item);
-  }
-
-  /**
-   * Navigate to the detail page for this item.
-   */
-  openItem(item: Item) {
-    this.navCtrl.push('ItemDetailPage', {
-      item: item
+    }, (err) => {
+      // Unable to log in
+      let toast = this.toastCtrl.create({
+        message: "En estos momentos no podemos procesar los usuarios. Intente mas tarde",
+        duration: 5000,
+        position: 'top'
+      });
+      toast.present();
     });
   }
+
+
+  /**
+   * Delete an user from the list of users.
+   */
+  deleteUser(user) {
+    this.user.deleteUser(user).subscribe((resp) => {
+      this.user.allUsers().subscribe((resp) => {this.currentUsers = resp;}, (err) => {});
+      let toast = this.toastCtrl.create({
+        message: "Usuario eliminado exitosamente",
+        duration: 3000,
+        position: 'top'
+      });
+      toast.present();
+
+
+
+    }, (err) => {
+      // Unable to log in
+      let toast = this.toastCtrl.create({
+        message: "Error al eliminar usuario. Intente nuevamente",
+        duration: 3000,
+        position: 'top'
+      });
+      toast.present();
+    });
+  }
+  
+
+   /**
+   * Modal to confirm delete an user
+   */
+  deleteAlert(user) {
+    let alert = this.alertCtrl.create(
+      {
+        title: `Está a punto de eliminar el usuario ${user.username}`,
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+            cssClass: 'cancelButton',
+            handler: data => {
+            }
+          },
+          {
+            text: 'Aceptar',
+            cssClass: 'okButton',
+            handler: data => {
+              this.deleteUser(user._id);
+
+            }
+          }
+        ]
+      }
+    );
+
+    alert.present();
+  }
+
 }

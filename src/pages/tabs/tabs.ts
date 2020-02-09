@@ -10,6 +10,7 @@ import { Tab1Root, Tab2Root, Tab3Root } from '../';
   templateUrl: 'tabs.html'
 })
 export class TabsPage {
+  // Tabs bottom of the main page after login
   tab1Root: any = Tab1Root;
   tab2Root: any = Tab2Root;
   tab3Root: any = Tab3Root;

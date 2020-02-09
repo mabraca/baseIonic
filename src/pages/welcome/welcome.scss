@@ -22,10 +22,11 @@ page-welcome {
   }
   .splash-logo {
     margin: auto;
-    background: url('../assets/img/appicon.png') repeat transparent;
+    background: url('../assets/img/appicon.jpg') repeat transparent;
     background-size: 100%;
     width: 128px;
     height: 128px;
+    border-radius:50%;
   }
   .splash-intro {
     font-size: 18px;
@@ -43,4 +44,9 @@ page-welcome {
       background-color: rgb(220, 220, 220);
     }
   }
+
+  .signup{
+    background-color:#00315a !important;
+  }
+
 }
