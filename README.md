@@ -3,8 +3,6 @@
 
 ## Providers
 
-The Super Starter comes with some basic implementations of common providers.
-
 ### User
 
 The `User` provider is used to authenticate users through its
