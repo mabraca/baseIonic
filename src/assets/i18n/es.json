@@ -17,7 +17,7 @@
   "TUTORIAL_SKIP_BUTTON": "Omitir",
   "TUTORIAL_CONTINUE_BUTTON": "Continuar",
 
-  "TUTORIAL_SLIDE1_TITLE": "Bienvenido a la aplicación prueba",
+  "TUTORIAL_SLIDE1_TITLE": "App para Hiberus",
   "TUTORIAL_SLIDE1_DESCRIPTION": " <b>Hiberus Tecnología</b> es una empresa que ha convertido el trabajo, el esfuerzo y la creatividad en algo grande.",
 
   "TUTORIAL_SLIDE2_TITLE": "¿Quién es Maria Bracamonte?",
@@ -26,9 +26,9 @@
   "TUTORIAL_SLIDE3_TITLE": "¿Por qué Hiberus?",
   "TUTORIAL_SLIDE3_DESCRIPTION": "Porque decidí buscar nuevos horizontes en el área tecnológica e Hiberus es una gran oportunidad",
 
-  "TUTORIAL_SLIDE4_TITLE": "Empecemos a navegar en la aplicación",
+  "TUTORIAL_SLIDE4_TITLE": "Veamos que hice.",
 
-  "WELCOME_INTRO": "Empecemos con lo básico",
+  "WELCOME_INTRO": "Bienvenido (a)",
 
   "SETTINGS_TITLE": "Configuración",
 
@@ -39,24 +39,16 @@
 
   "WELCOME_TITLE": "Bienvenido",
 
-  "LOGIN_TITLE": "Logueate",
+  "LOGIN_TITLE": "Inicio de sesión",
   "LOGIN_BUTTON": "Iniciar Sesión",
   "SIGNUP_TITLE": "Registro",
   "SIGNUP_BUTTON": "Registrar",
 
   "LIST_MASTER_TITLE": "Usuarios",
 
-  "ITEM_CREATE_TITLE": "Nuevo Usuario",
-  "ITEM_CREATE_CHOOSE_IMAGE": "Agregar Imagen",
-
-  "ITEM_NAME_PLACEHOLDER": "Nombre",
-  "ITEM_ABOUT_PLACEHOLDER": "Acerca",
-
   "DONE_BUTTON": "Hecho",
   "CANCEL_BUTTON": "Cancelar",
   "DELETE_BUTTON": "Eliminar",
-
-  "CARDS_TITLE": "Social",
 
   "SEARCH_TITLE": "Buscar",
   "SEARCH_PLACEHOLDER": "Ingresa un usuario, e.g. \"pruebaM\""

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, MenuController, NavController, Platform } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
-import { MainPage } from '../';
 
 export interface Slide {
   title: string;

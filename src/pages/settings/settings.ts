@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, App } from 'ionic-angular';
 import { User } from '../../providers';
 import { Settings } from '../../providers';
 
@@ -16,31 +15,21 @@ import { Settings } from '../../providers';
   templateUrl: 'settings.html'
 })
 export class SettingsPage {
-  // Our local settings object
-  options: any;
-
-  settingsReady = false;
-
-  form: FormGroup;
 
   profileSettings = {
     page: 'profile',
     pageTitleKey: 'SETTINGS_PAGE_PROFILE'
   };
 
-  page: string = 'main';
-  pageTitleKey: string = 'SETTINGS_TITLE';
   pageTitle: string;
-
-  subSettings: any = SettingsPage;
 
   constructor(public navCtrl: NavController,
     public settings: Settings,
-    public formBuilder: FormBuilder,
     public navParams: NavParams,
     public translate: TranslateService,
     public user: User,
-    private alertCtrl: AlertController) {
+    private alertCtrl: AlertController,
+    public appCtrl: App) {
   }
 
 
@@ -52,10 +41,11 @@ export class SettingsPage {
   logout(){
     // Do logout. Clear data and go to Welcome page
     this.user.logout();
-    this.navCtrl.setRoot('WelcomePage', {}, {
+    this.appCtrl.getRootNav().setRoot('WelcomePage', {}, {
         animate: true,
         direction: 'forward'
       });
+    this.navCtrl.popToRoot();
   }
 
    /**
